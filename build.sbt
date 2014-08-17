@@ -1,22 +1,94 @@
-organization  := "com.example"
+name := "detroitapi"
 
-version       := "0.1"
+organization := "com.theb0ardside"
 
-scalaVersion  := "2.10.3"
+version := "0.1.0-SNAPSHOT"
 
-scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+homepage := Some(url("https://github.com/sideb0ard/detroitapi"))
 
-libraryDependencies ++= {
-  val akkaV = "2.1.4"
-  val sprayV = "1.1.1"
-  Seq(
-    "io.spray"            %   "spray-can"     % sprayV,
-    "io.spray"            %   "spray-routing" % sprayV,
-    "io.spray"            %   "spray-testkit" % sprayV  % "test",
-    "com.typesafe.akka"   %%  "akka-actor"    % akkaV,
-    "com.typesafe.akka"   %%  "akka-testkit"  % akkaV   % "test",
-    "org.specs2"          %%  "specs2"        % "2.2.3" % "test"
+startYear := Some(2013)
+
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/sideb0ard/detroitapi"),
+    "scm:git:https://github.com/sideb0ard/detroitapi.git",
+    Some("scm:git:git@github.com:sideb0ard/detroitapi.git")
   )
+)
+
+scalaVersion := "2.11.1"
+
+crossScalaVersions := Seq(
+/*  "2.9.3-RC1",
+  "2.9.2",
+  "2.9.1", "2.9.1-1",
+  "2.9.0", "2.9.0-1",
+  "2.8.0", "2.8.1", "2.8.2" */
+)
+
+// These options will be used for *all* versions.
+scalacOptions ++= Seq(
+  "-deprecation"
+  ,"-unchecked"
+  ,"-encoding", "UTF-8"
+  ,"-Xlint"
+  // "-optimise"   // this option will slow your build
+)
+
+scalacOptions ++= Seq(
+  "-Yclosure-elim",
+  "-Yinline"
+)
+
+// These language flags will be used only for 2.10.x.
+// Uncomment those you need, or if you hate SIP-18, all of them.
+scalacOptions <++= scalaVersion map { sv =>
+  if (sv startsWith "2.11") List(
+    "-Xverify"
+    ,"-feature"
+    ,"-language:postfixOps"
+  )
+  else Nil
 }
 
-Revolver.settings
+javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation")
+
+val akka = "2.3.3"
+val spray = "1.3.1-20140423"
+
+/* dependencies */
+libraryDependencies ++= Seq (
+  "com.github.nscala-time" %% "nscala-time" % "1.2.0"
+  // -- testing --
+  , "org.scalatest" % "scalatest_2.11" % "2.2.0" % "test"
+  // -- Logging --
+  ,"ch.qos.logback" % "logback-classic" % "1.1.2"
+  ,"com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+  // -- Akka --
+  ,"com.typesafe.akka" %% "akka-testkit" % akka % "test"
+  ,"com.typesafe.akka" %% "akka-actor" % akka
+  ,"com.typesafe.akka" %% "akka-slf4j" % akka
+  // -- Sql --
+  //,"com.typesafe.slick" %% "slick" % "2.0.2"
+  // -- Spray --
+  ,"io.spray" %% "spray-routing" % spray
+  ,"io.spray" %% "spray-client" % spray
+  ,"io.spray" %% "spray-testkit" % spray % "test"
+  // -- json --
+  ,"org.json4s" %% "json4s-jackson" % "3.2.10"
+  // -- config --
+  ,"com.typesafe" % "config" % "1.2.1"
+)
+
+/* you may need these repos */
+resolvers ++= Seq(
+  // Resolver.sonatypeRepo("snapshots")
+  // Resolver.typesafeRepo("releases")
+  "spray repo" at "http://repo.spray.io"
+)
+
+//atmosSettings
+
+packageArchetype.java_server
+
+seq(Revolver.settings: _*)

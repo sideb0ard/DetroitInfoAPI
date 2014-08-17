@@ -4,9 +4,9 @@ RUN apt-get update && apt-get -y upgrade
 RUN apt-get install -y openjdk-7-jre-headless
 
 RUN mkdir /opt/detroitapi/
-ADD target/scala-2.10/detroitinfoapi-assembly-0.1.jar /opt/detroitapi/djar.jar
+ADD target/scala-2.11/detroitapi-assembly-0.1.0-SNAPSHOT.jar /opt/detroitapi/djar.jar
 
-EXPOSE 8081
+EXPOSE 7777
 CMD ["java", "-jar", "/opt/detroitapi/djar.jar"]
 
 
